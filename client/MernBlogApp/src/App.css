@@ -1,0 +1,140 @@
+/* *{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+} */
+main {
+  padding: 10px;
+  margin: 0 auto;
+  max-width: 70vw;
+  color: white;
+}
+
+img {
+  width: 100%;
+  object-fit: cover;
+}
+
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 50px;
+  margin-top: 20px;
+}
+
+header a {
+  text-decoration: none;
+  color: inherit;
+}
+
+header a.logo {
+  font-weight: bold;
+  font-size: 1.5rem;
+}
+
+header nav {
+  display: flex;
+  gap: 1rem;
+  font-size: larger;
+}
+
+div.post {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 30px;
+  margin-bottom: 30px;
+}
+div.post div.blog-text {
+  margin: 0;
+}
+
+div.post div.blog-text h2 {
+  margin: 0;
+  font-size: 2rem;
+}
+
+div.post p.info {
+  margin: 5px 0;
+  color: #999;
+  font-size: 0.8rem;
+  font-weight: bolder;
+  display: flex;
+  gap: 10px;
+}
+
+div.post p.info time {
+  color: #777;
+}
+
+div.post p.description {
+  margin: 10px 0;
+}
+
+/* *********** Login/Register Page CSS********** */
+
+.wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+}
+
+.register,
+.login {
+  background-color: #222831;
+  padding: 40px;
+  border-radius: 8px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+  width: 70%;
+  max-width: 400px;
+  height: 50vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.register input[type="text"],
+.login input[type="text"] {
+  background-color: #393e46;
+  border: none;
+  border-bottom: 2px solid #00adb5;
+  margin-bottom: 20px;
+  padding: 10px;
+  width: calc(100% - 20px);
+  color: #eee;
+  border-radius: 4px;
+}
+
+.register input[type="text"]::placeholder,
+.login input[type="text"]::placeholder {
+  color: #bbb;
+}
+
+.register button,
+.login button {
+  background-color: #00adb5;
+  color: #222831;
+  border: none;
+  padding: 10px;
+  width: 100%;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s;
+}
+
+.register button:hover,
+.login button:hover {
+  background-color: #007b7f;
+}
+
+.form-content{
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+}
+.wrapper .form-content h1{
+  text-align: center;
+}
