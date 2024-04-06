@@ -8,11 +8,16 @@ const salt = bcrypt.genSaltSync(10);
 const jwt = require('jsonwebtoken');
 const secretKey = "padkcw6t456yge0948eujhhbcnb2m3n4nm7fcyq7betiyushd"
 const cookieParser = require("cookie-parser")
+const multer = require("multer");
+const uploadMiddleware = multer({dest:'uploads/'})
+const fs = require('fs');
+const Post = require('./models/Post')
 
 // Enable CORS for all routes
 app.use(cors({credentials:true,origin:'http://localhost:5173'}));
 app.use(express.json());
 app.use(cookieParser())
+app.use('/uploads',express.static(__dirname + '/uploads'))
 
 mongoose.connect(
   "mongodb+srv://Faizan:TcNaWUyVCvAXsSOF@cluster0.fwl3b04.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
@@ -61,6 +66,39 @@ app.get("/profile",(req,res) => {
 //for logout
 app.post("/logout",(req,res)=>{
   res.cookie('token','').json('Ok')
+});
+
+app.post("/post",uploadMiddleware.single('file') ,async(req,res)=>{
+  const {originalname,path} = req.file;
+  const parts = originalname.split('.');
+  const ext = parts[parts.length - 1];
+  const newPath = path+'.'+ext
+  fs.renameSync(path,newPath)
+
+  const {token} = req.cookies;
+  jwt.verify(token,secretKey,{},async (error,info)=>{
+    if(error) throw error
+    const {title,summary,content} = req.body;
+  const PostDoc = await Post.create({
+    title,
+    summary,
+    content,
+    cover:newPath,
+    author:info.id,
+  })
+  res.json(PostDoc)
+  })
+})
+
+app.get('/post',async (req,res)=>{
+  const Posts = await Post.find().populate('author',['username']).sort({createdAt:-1}).limit(30)
+  res.json(Posts)
+})
+
+app.get('/post/:id',async(req,res)=>{
+  const {id} = (req.params)
+  const PostDoc = await Post.findById(id).populate('author',['username'])
+  res.json(PostDoc)
 })
 
 app.listen(4000);

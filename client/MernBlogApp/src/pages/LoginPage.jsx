@@ -8,7 +8,7 @@ function LoginPage() {
   const [username, setusername] = useState('')
   const [password, setpassword] = useState('')
   const [redirect, setredirect] = useState(false)
-  const {setuserInfo,userInfo } = useContext(UserContext) 
+  const {setuserInfo,userInfo} = useContext(UserContext) 
 
   async function handleLogin(e){
     e.preventDefault();

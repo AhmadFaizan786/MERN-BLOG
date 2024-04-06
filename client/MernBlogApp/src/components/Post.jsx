@@ -1,25 +1,24 @@
 import React from "react";
+import { format, addDays } from "date-fns";
+import { Link } from "react-router-dom";
 
-export const Post = () => {
+export const Post = ({_id, title, summary, content, cover, createdAt, author }) => {
   return (
     <div className="post">
       <div className="blog-img">
-        <img src="https://img.freepik.com/free-photo/business-women-signature-document_1388-90.jpg?size=626&ext=jpg"></img>
+        <Link to={`/post/${_id}`}>
+          <img src={"http://localhost:4000/" + cover}></img>
+        </Link>
       </div>
       <div className="blog-text">
-        <h2>My First Blog</h2>
+        <Link to={`/post/${_id}`}>
+          <h2>{title}</h2>
+        </Link>
         <p className="info">
-          <a className="author">Faizan Ahmad</a>
-          <time>2024-04-04 7:30</time>
+          <a className="author">{author.username}</a>
+          <time>{format(new Date(createdAt), "MM/dd/yyyy  hh:mm a")}</time>
         </p>
-        <p className="description">
-          Lorem ipsum" is a placeholder text commonly used to demonstrate the
-          visual form of a document or a typeface without relying on meaningful
-          content. Here's a 40-word iteration for you: "Lorem ipsum dolor sit
-          amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut
-          labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
-          exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat
-        </p>
+        <p className="description">{summary}</p>
       </div>
     </div>
   );

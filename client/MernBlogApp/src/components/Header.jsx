@@ -1,12 +1,12 @@
 import React, { useContext } from 'react'
 import { useEffect,useState } from 'react'
-import { Link, json } from 'react-router-dom'
+import { Link} from 'react-router-dom'
 import { UserContext } from '../contexts/UserContext'
 
 export const Header=()=>{
 
   // const [username, setusername] = useState(null)
-  const {setuserInfo,userInfo} = useContext(UserContext)
+  const {setuserInfo,userInfo} = useContext(UserContext);
 
   useEffect(() => {
     fetch('http://localhost:4000/profile',{credentials:'include'}).then(response=>{

@@ -1,8 +1,4 @@
-/* *{
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-} */
+
 main {
   padding: 10px;
   margin: 0 auto;
@@ -47,12 +43,20 @@ div.post {
 }
 div.post div.blog-text {
   margin: 0;
+  
+}
+
+div.post div.blog-text a{
+  text-decoration: none;
+  color: inherit;
 }
 
 div.post div.blog-text h2 {
   margin: 0;
   font-size: 2rem;
 }
+
+
 
 div.post p.info {
   margin: 5px 0;
@@ -137,4 +141,84 @@ div.post p.description {
 }
 .wrapper .form-content h1{
   text-align: center;
+}
+
+/* CSS for Dark Mode Quill Editor */
+
+/* Toolbar styling */
+.ql-toolbar {
+  background: #2c2c2c;
+  border: 1px solid #444;
+}
+
+.ql-toolbar button,
+.ql-toolbar button.ql-active,
+.ql-toolbar .ql-picker-label,
+.ql-toolbar .ql-picker-item {
+  color: #ccc; /* Adjusts the color of toolbar icons */
+}
+
+.ql-toolbar button:hover,
+.ql-toolbar button:focus,
+.ql-toolbar button.ql-active,
+.ql-toolbar .ql-picker-label:hover,
+.ql-toolbar .ql-picker-label.ql-active,
+.ql-toolbar .ql-picker-item:hover,
+.ql-toolbar .ql-picker-item.ql-selected,
+.ql-toolbar .ql-picker-item.ql-active {
+  background: #3a3a3a; /* Hover and active state background */
+}
+
+/* Color Picker adjustments */
+.ql-toolbar .ql-picker.ql-expanded .ql-picker-options {
+  background: #333;
+  border-color: #444;
+}
+
+.ql-snow .ql-picker.ql-expanded .ql-picker-options {
+  z-index: 10000; /* Ensure dropdowns are above everything */
+}
+
+/* Tooltip styling */
+.ql-snow .ql-tooltip {
+  background: #363636;
+  color: #fff;
+}
+
+.ql-snow .ql-tooltip input[type=text] {
+  color: #000; /* Input text color - you might want to keep this dark on light for visibility */
+}
+
+.ql-snow .ql-tooltip a.ql-preview {
+  color: #4d9ff7;
+}
+
+/* Editor area */
+.ql-container.ql-snow {
+  border: 1px solid #444;
+  background: #2c2c2c;
+}
+
+.ql-editor {
+  background: #2c2c2c; /* Background of the editor */
+  color: #ddd; /* Text color */
+}
+
+.ql-editor.ql-blank::before {
+  color: #aaa; /* Placeholder text color */
+}
+
+/* Adjusting for links and other elements within the editor */
+.ql-snow a {
+  color: #4d9ff7;
+}
+
+.ql-editor p,
+.ql-editor ol,
+.ql-editor ul,
+.ql-editor pre,
+.ql-editor blockquote {
+  margin-bottom: 0;
+  padding: 0;
+  color: inherit; /* Ensures text inherits the editor's color */
 }
