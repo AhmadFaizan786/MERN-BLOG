@@ -29,13 +29,13 @@ export const Header=()=>{
   return (
     <header>
         <Link to ="" className="logo">
-          BlogSphere
+          B L O G S P H E R E
         </Link>
         <nav>
         {username && (
           <>
-            <Link to="/create">Create Blog</Link>
-            <a onClick={handleLogout}>Logout</a>
+            <Link to="/create" className='nav-link'>Create Blog</Link>
+            <a onClick={handleLogout} className='nav-link'>Logout</a>
           </>
         )}
         {

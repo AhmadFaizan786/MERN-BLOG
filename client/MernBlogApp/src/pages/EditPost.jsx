@@ -1,25 +1,38 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useState } from "react";
-import { Navigate } from "react-router-dom";
+import { Navigate, useParams } from "react-router-dom";
 import Editor from "../components/Editor";
 
-export const CreateBlog = () => {
+function EditPost() {
+  const { id } = useParams();
   const [title, settitle] = useState("");
   const [summary, setsummary] = useState("");
   const [content, setcontent] = useState("");
   const [files, setfiles] = useState("");
   const [redirect, setredirect] = useState(false);
 
-  async function createNewBlog(e) {
+  useEffect(() => {
+    fetch(`http://localhost:4000/post/`+id).then((response) => {
+      response.json().then((postInfo) => {
+        settitle(postInfo.title);
+        setsummary(postInfo.summary);
+        setcontent(postInfo.content);
+      });
+    });
+  }, []);
+
+  async function updatePost(e) {
+    e.preventDefault();
     const data = new FormData();
     data.set("title", title);
     data.set("summary", summary);
     data.set("content", content);
-    data.set("file", files[0]);
-    e.preventDefault();
-    console.log(files);
-    const response = await fetch("http://localhost:4000/post", {
-      method: "POST",
+    data.set("id",id)
+    if (files?.[0]) {
+      data.set("file", files?.[0]);
+    }
+    const response = await fetch(`http://localhost:4000/post`, {
+      method: "PUT",
       body: data,
       credentials: "include",
     });
@@ -29,11 +42,11 @@ export const CreateBlog = () => {
   }
 
   if (redirect) {
-    return <Navigate to={"/"} />;
+    return <Navigate to={"/post/" + id} />;
   }
 
   return (
-    <form onSubmit={createNewBlog}>
+    <form onSubmit={updatePost}>
       <input
         type="title"
         placeholder={"Title"}
@@ -57,8 +70,9 @@ export const CreateBlog = () => {
         }}
       />
       <Editor value={content} onChange={setcontent} />
-
-      <button>Create Blog</button>
+      <button>Update Blog</button>
     </form>
   );
-};
+}
+
+export default EditPost;

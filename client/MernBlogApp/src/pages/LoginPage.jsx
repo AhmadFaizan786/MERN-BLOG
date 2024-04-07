@@ -38,7 +38,7 @@ function LoginPage() {
           <div className="inputs">
             <h1>Login</h1>
             <input type="text" placeholder="username" value={username} onChange={(e) => {setusername(e.target.value)}}/>
-            <input type="text" placeholder="password" value={password} onChange={(e)=>{setpassword(e.target.value)}} />
+            <input className="login-password" type="password" placeholder="password" value={password} onChange={(e)=>{setpassword(e.target.value)}} />
           </div>
           <div className="login-btn">
             <button>Login</button>
