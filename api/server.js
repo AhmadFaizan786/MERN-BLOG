@@ -12,6 +12,8 @@ const multer = require("multer");
 const uploadMiddleware = multer({ dest: "uploads/" });
 const fs = require("fs");
 const Post = require("./models/Post");
+require('dotenv').config();
+
 
 // Enable CORS for all routes
 app.use(cors({ credentials: true, origin: "http://localhost:5173" }));
@@ -20,7 +22,7 @@ app.use(cookieParser());
 app.use("/uploads", express.static(__dirname + "/uploads"));
 
 mongoose.connect(
-  "mongodb+srv://Faizan:TcNaWUyVCvAXsSOF@cluster0.fwl3b04.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+  process.env.MONGODB_URL
 );
 
 app.post("/register", async (req, res) => {
@@ -142,8 +144,6 @@ app.get("/post/:id", async (req, res) => {
   res.json(PostDoc);
 });
 
-app.listen(4000);
-
-//TcNaWUyVCvAXsSOF  (MongoDb-Password)
-//mongodb+srv://Faizan:TcNaWUyVCvAXsSOF@cluster0.fwl3b04.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0 (connection url)
-//mongodb+srv://Faizan:<password>@cluster0.fwl3b04.mongodb.net/ (connection url)
+app.listen(4000,function(){
+  console.log("Server is running..")
+});
