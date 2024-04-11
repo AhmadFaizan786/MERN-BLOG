@@ -25,6 +25,12 @@ mongoose.connect(
   process.env.MONGODB_URL
 );
 
+// Example of a simple Mongoose connection script
+
+// mongoose.connect(process.env.MONGODB_URL)
+//   .then(() => console.log('Connection successful'))
+//   .catch((err) => console.error('Could not connect to MongoDB:', err));
+
 app.post("/register", async (req, res) => {
   const { username, password } = req.body;
   try {
