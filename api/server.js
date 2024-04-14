@@ -25,11 +25,7 @@ mongoose.connect(
   process.env.MONGODB_URL
 );
 
-// Example of a simple Mongoose connection script
-
-// mongoose.connect(process.env.MONGODB_URL)
-//   .then(() => console.log('Connection successful'))
-//   .catch((err) => console.error('Could not connect to MongoDB:', err));
+//Register Api
 
 app.post("/register", async (req, res) => {
   const { username, password } = req.body;
@@ -43,6 +39,9 @@ app.post("/register", async (req, res) => {
     res.status(400).json(error);
   }
 });
+
+
+//Login Api
 
 app.post("/login", async (req, res) => {
   const { username, password } = req.body;
@@ -76,6 +75,8 @@ app.post("/logout", (req, res) => {
   res.cookie("token", "").json("Ok");
 });
 
+//Create Blog Api
+
 app.post("/post", uploadMiddleware.single("file"), async (req, res) => {
   const { originalname, path } = req.file;
   const parts = originalname.split(".");
@@ -97,6 +98,8 @@ app.post("/post", uploadMiddleware.single("file"), async (req, res) => {
     res.json(PostDoc);
   });
 });
+
+//Update Blog Api
 
 app.put("/post", uploadMiddleware.single("file"), async (req, res) => {
   let newPath = null;
@@ -150,6 +153,11 @@ app.get("/post/:id", async (req, res) => {
   res.json(PostDoc);
 });
 
-app.listen(4000,function(){
-  console.log("Server is running..")
+const PORT = process.env.PORT || 4000;
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
 });
+
+// app.listen(4000,function(){
+//   console.log("Server is running..")
+// });
