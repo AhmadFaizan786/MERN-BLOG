@@ -157,7 +157,10 @@ const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
+<<<<<<< HEAD
 
 // app.listen(4000,function(){
 //   console.log("Server is running..")
 // });
+=======
+>>>>>>> e3fe0e2789d0cdb56631d25ede97846a156c7cf4

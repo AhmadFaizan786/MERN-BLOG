@@ -17,7 +17,7 @@ export const Header=()=>{
   }, [])
 
   function handleLogout(){
-    fetch('http://localhost:4000/logout',{
+    fetch('https://mern-blog-backend-vq70.onrender.comp/logout',{
       credentials:'include',
       method:'POST',
     });
