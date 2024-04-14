@@ -9,7 +9,7 @@ export const Header=()=>{
   const {setuserInfo,userInfo} = useContext(UserContext);
 
   useEffect(() => {
-    fetch('http://localhost:4000/profile',{credentials:'include'}).then(response=>{
+    fetch('https://mern-blog-backend-vq70.onrender.com/profile',{credentials:'include'}).then(response=>{
       response.json().then(userInfo=>{
         setuserInfo(userInfo)
       })
@@ -17,7 +17,7 @@ export const Header=()=>{
   }, [])
 
   function handleLogout(){
-    fetch('http://localhost:4000/logout',{
+    fetch('https://mern-blog-backend-vq70.onrender.comp/logout',{
       credentials:'include',
       method:'POST',
     });
