@@ -6,13 +6,21 @@ const User = require("./models/user");
 const bcrypt = require("bcrypt");
 const salt = bcrypt.genSaltSync(10);
 const jwt = require("jsonwebtoken");
-const secretKey = "padkcw6t456yge0948eujhhbcnb2m3n4nm7fcyq7betiyushd";
+// const secretKey = process.env.JWT_SECRET_KEY;
 const cookieParser = require("cookie-parser");
 const multer = require("multer");
 const uploadMiddleware = multer({ dest: "uploads/" });
 const fs = require("fs");
 const Post = require("./models/Post");
 require('dotenv').config();
+
+const crypto = require('crypto');
+// Generate a random JWT secret key
+const generateJWTSecret = () => {
+  return crypto.randomBytes(32).toString('hex');
+};
+const secretKey = process.env.JWT_SECRET_KEY || generateJWTSecret();
+
 
 
 // Enable CORS for all routes
