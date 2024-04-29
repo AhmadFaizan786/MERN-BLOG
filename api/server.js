@@ -83,29 +83,70 @@ app.post("/logout", (req, res) => {
   res.cookie("token", "").json("Ok");
 });
 
-//Create Blog Api
+// //Create Blog Api
 
-app.post("/post", uploadMiddleware.single("file"), async (req, res) => {
-  const { originalname, path } = req.file;
-  const parts = originalname.split(".");
-  const ext = parts[parts.length - 1];
-  const newPath = path + "." + ext;
-  fs.renameSync(path, newPath);
+// app.post("/post", uploadMiddleware.single("file"), async (req, res) => {
+//   const { originalname, path } = req.file;
+//   const parts = originalname.split(".");
+//   const ext = parts[parts.length - 1];
+//   const newPath = path + "." + ext;
+//   fs.renameSync(path, newPath);
 
-  const { token } = req.cookies;
-  jwt.verify(token, secretKey, {}, async (error, info) => {
-    if (error) throw error;
+//   const { token } = req.cookies;
+//   jwt.verify(token, secretKey, {}, async (error, info) => {
+//     if (error) throw error;
+//     const { title, summary, content } = req.body;
+//     const PostDoc = await Post.create({
+//       title,
+//       summary,
+//       content,
+//       cover: newPath,
+//       author: info.id,
+//     });
+//     res.json(PostDoc);
+//   });
+// });
+
+// Create Blog API
+app.post("/post", uploadMiddleware.single("file"), verifyToken, async (req, res) => {
+  try {
+    // JWT verified successfully, proceed with creating blog post
     const { title, summary, content } = req.body;
-    const PostDoc = await Post.create({
+    const { originalname, path } = req.file;
+    const parts = originalname.split(".");
+    const ext = parts[parts.length - 1];
+    const newPath = path + "." + ext;
+    fs.renameSync(path, newPath);
+    const post = new Post({
       title,
       summary,
       content,
       cover: newPath,
-      author: info.id,
+      author: req.user.id,
     });
-    res.json(PostDoc);
-  });
+    await post.save();
+    res.json({ message: "Blog post created successfully" });
+  } catch (error) {
+    console.error("Create post error:", error);
+    res.status(500).json({ error: "Failed to create blog post" });
+  }
 });
+
+// Helper function to verify JWT token
+function verifyToken(req, res, next) {
+  const token = req.cookies.token;
+  if (!token) {
+    return res.status(401).json({ error: "Unauthorized: Token not provided" });
+  }
+  jwt.verify(token, secretKey, (err, decodedToken) => {
+    if (err) {
+      console.error("Token verification error:", err);
+      return res.status(403).json({ error: "Unauthorized: Invalid token" });
+    }
+    req.user = decodedToken;
+    next();
+  });
+}
 
 //Update Blog Api
 
