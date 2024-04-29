@@ -8,7 +8,7 @@ function PostPage() {
   const [postInfo, setpostInfo] = useState(null);
   const { userInfo } = useContext(UserContext);
   useEffect(() => {
-    fetch(`https://mern-blog-backend-vq70.onrender.com/post/${id}`).then((response) => {
+    fetch(`http://localhost:3000/post/${id}`).then((response) => {
       response.json().then((postInfo) => {
         setpostInfo(postInfo);
       });
@@ -22,7 +22,7 @@ function PostPage() {
       <time>{format(new Date(postInfo.createdAt), "MM/dd/yyyy  hh:mm a")}</time>
       <div className="author">By {postInfo.author.username} </div>
       <div className="image">
-        <img src={`https://mern-blog-backend-vq70.onrender.com/${postInfo.cover}`} />
+        <img src={`http://localhost:3000/${postInfo.cover}`} />
       </div>
       {userInfo.id === postInfo.author._id && (
         <div className="edit-blog">
