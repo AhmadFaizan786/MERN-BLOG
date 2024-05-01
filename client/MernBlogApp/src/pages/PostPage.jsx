@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import { Link, useParams } from "react-router-dom";
 import { format, addDays } from "date-fns";
 import { UserContext } from "../contexts/UserContext";
+import BlogImages from "../components/BlogImages";
 
 function PostPage() {
   const { id } = useParams();
@@ -22,7 +23,7 @@ function PostPage() {
       <time>{format(new Date(postInfo.createdAt), "MM/dd/yyyy  hh:mm a")}</time>
       <div className="author">By {postInfo.author.username} </div>
       <div className="image">
-        <img src={`http://localhost:3000/${postInfo.cover}`} />
+        <BlogImages src={`${postInfo.cover}`} />
       </div>
       {userInfo.id === postInfo.author._id && (
         <div className="edit-blog">

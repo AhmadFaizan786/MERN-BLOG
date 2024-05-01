@@ -1,13 +1,14 @@
 import React from "react";
 import { format, addDays } from "date-fns";
 import { Link } from "react-router-dom";
+import BlogImages from "./BlogImages";
 
-export const Post = ({_id, title, summary, content, cover, createdAt, author }) => {
+export const Post = ({_id, title, summary,cover, createdAt, author }) => {
   return (
     <div className="post">
       <div className="blog-img">
         <Link to={`/post/${_id}`}>
-          <img src={"http://localhost:3000/" + cover}></img>
+          <BlogImages src={cover}></BlogImages>
         </Link>
       </div>
       <div className="blog-text">
