@@ -25,7 +25,7 @@ const bucket = "faizan-mern-blog";
 
 
 // Enable CORS for all routes
-app.use(cors({ credentials: true, origin: "https://mern-blog-qzccpz06f-faizan-ahmads-projects-11324d24.vercel.app/" }));
+app.use(cors({ credentials: true, origin: "http://localhost:5173" }));
 app.use(express.json());
 app.use(cookieParser());
 app.use("/uploads", express.static(__dirname + "/uploads"));
@@ -58,7 +58,7 @@ async function uploadToS3(path, originalFilename, mimetype){
 
 //Register Api
 
-app.post("/register", async (req, res) => {
+app.post("/api/register", async (req, res) => {
   const { username, password } = req.body;
   try {
     const UserDoc = await User.create({
@@ -74,7 +74,7 @@ app.post("/register", async (req, res) => {
 
 //Login Api
 
-app.post("/login", async (req, res) => {
+app.post("/api/login", async (req, res) => {
   const { username, password } = req.body;
   const UserDoc = await User.findOne({ username });
   const passOk = bcrypt.compareSync(password, UserDoc.password);
@@ -92,7 +92,7 @@ app.post("/login", async (req, res) => {
   }
 });
 
-app.get("/profile", (req, res) => {
+app.get("/api/profile", (req, res) => {
   const { token } = req.cookies;
   jwt.verify(token, secretKey, {}, (error, info) => {
     if (error) throw error;
@@ -102,14 +102,14 @@ app.get("/profile", (req, res) => {
 });
 
 //for logout
-app.post("/logout", (req, res) => {
+app.post("/api/logout", (req, res) => {
   // res.cookie("token", "").json("Ok");
   res.cookie("token", "", { expires: new Date(0) }).json("Logged out successfully");
 });
 
 // //Create Blog Api
 
-app.post("/post",uploadMiddleware.single("file"), async (req, res) => {
+app.post("/api/post",uploadMiddleware.single("file"), async (req, res) => {
   const { originalname, path,mimetype } = req.file;
   const url = await uploadToS3(path,originalname,mimetype);
   // PostDoc.push(url)
@@ -182,7 +182,7 @@ app.post("/post",uploadMiddleware.single("file"), async (req, res) => {
 
 //Update Blog Api
 
-app.put("/post", uploadMiddleware.single("file"), async (req, res) => {
+app.put("/api/post", uploadMiddleware.single("file"), async (req, res) => {
   let newPath = null;
   if (req.file) {
     // const { originalname, path } = req.file;
@@ -225,7 +225,7 @@ app.put("/post", uploadMiddleware.single("file"), async (req, res) => {
   });
 });
 
-app.get("/post", async (req, res) => {
+app.get("/api/post", async (req, res) => {
   const Posts = await Post.find()
     .populate("author", ["username"])
     .sort({ createdAt: -1 })
@@ -233,25 +233,25 @@ app.get("/post", async (req, res) => {
   res.json(Posts);
 });
 
-app.get("/post/:id", async (req, res) => {
+app.get("/api/post/:id", async (req, res) => {
   const { id } = req.params;
   const PostDoc = await Post.findById(id).populate("author", ["username"]);
   res.json(PostDoc);
 });
 
-app.use((req, res, next) => {
-  const { token } = req.cookies;
-  if (!token) {
-      return res.status(401).json({ message: "No token provided" });
-  }
-  jwt.verify(token, secretKey, (error, decoded) => {
-      if (error) {
-          return res.status(401).json({ message: "Failed to authenticate token" });
-      }
-      req.user = decoded;
-      next();
-  });
-});
+// app.use((req, res, next) => {
+//   const { token } = req.cookies;
+//   if (!token) {
+//       return res.status(401).json({ message: "No token provided" });
+//   }
+//   jwt.verify(token, secretKey, (error, decoded) => {
+//       if (error) {
+//           return res.status(401).json({ message: "Failed to authenticate token" });
+//       }
+//       req.user = decoded;
+//       next();
+//   });
+// });
 
 
 const PORT = process.env.PORT || 3000;
