@@ -25,7 +25,7 @@ const bucket = "faizan-mern-blog";
 
 
 // Enable CORS for all routes
-app.use(cors({ credentials: true, origin: "http://localhost:5173" }));
+app.use(cors({ credentials: true, origin: "https://mern-blog-qzccpz06f-faizan-ahmads-projects-11324d24.vercel.app/" }));
 app.use(express.json());
 app.use(cookieParser());
 app.use("/uploads", express.static(__dirname + "/uploads"));
@@ -109,74 +109,74 @@ app.post("/logout", (req, res) => {
 
 // //Create Blog Api
 
-// app.post("/post",uploadMiddleware.single("file"), async (req, res) => {
-//   const { originalname, path,mimetype } = req.file;
-//   const url = await uploadToS3(path,originalname,mimetype);
-//   // PostDoc.push(url)
-//   // const parts = originalname.split(".");
-//   // const ext = parts[parts.length - 1];
-//   // const newPath = path + "." + ext;
-//   // fs.renameSync(path, newPath);
-//   // post.push(url)
+app.post("/post",uploadMiddleware.single("file"), async (req, res) => {
+  const { originalname, path,mimetype } = req.file;
+  const url = await uploadToS3(path,originalname,mimetype);
+  // PostDoc.push(url)
+  // const parts = originalname.split(".");
+  // const ext = parts[parts.length - 1];
+  // const newPath = path + "." + ext;
+  // fs.renameSync(path, newPath);
+  // post.push(url)
 
-//   const { token } = req.cookies;
-//   jwt.verify(token, secretKey, {}, async (error, info) => {
-//     if (error) {
-//       // Handle the JWT verification error gracefully
-//       console.error("JWT verification error:", error);
-//       return res.status(401).json({ message: "Unauthorized" }); // Send an unauthorized response
-//     }
-//     const { title, summary, content } = req.body;
-//     // const newPath = path;
-//     const post = await Post.create({
-//       title,
-//       summary,
-//       content,
-//       cover: url,
-//       author: info.id,
-//     });
-//     res.json(post);
-//   });
-// });
-
-app.post("/post", uploadMiddleware.single("file"), async (req, res) => {
-  const { originalname, path, mimetype } = req.file;
-  const url = await uploadToS3(path, originalname, mimetype);
-
-  // Extract the JWT token from the request cookies
-  const token = req.cookies.token;
-
-  // Verify the JWT token
-  jwt.verify(token, secretKey, async (error, decodedToken) => {
+  const { token } = req.cookies;
+  jwt.verify(token, secretKey, {}, async (error, info) => {
     if (error) {
+      // Handle the JWT verification error gracefully
       console.error("JWT verification error:", error);
-      return res.status(401).json({ message: "Unauthorized" });
+      return res.status(401).json({ message: "Unauthorized" }); // Send an unauthorized response
     }
-
-    // If token is valid, extract necessary information from decoded token
-    const { id: authorId } = decodedToken;
-
-    // Extract blog data from request body
     const { title, summary, content } = req.body;
-
-    try {
-      // Create a new post with the extracted data
-      const post = await Post.create({
-        title,
-        summary,
-        content,
-        cover: url,
-        author: authorId, // Assign authorId extracted from the token
-      });
-
-      // Send response with the created post
-      return res.json(post);
-    } catch (error) {
-      console.error("Error creating post:", error);
-      return res.status(500).json({ message: "Internal Server Error" });
-    }
+    // const newPath = path;
+    const post = await Post.create({
+      title,
+      summary,
+      content,
+      cover: url,
+      author: info.id,
+    });
+    res.json(post);
   });
 });
+
+// app.post("/post", uploadMiddleware.single("file"), async (req, res) => {
+//   const { originalname, path, mimetype } = req.file;
+//   const url = await uploadToS3(path, originalname, mimetype);
+
+//   // Extract the JWT token from the request cookies
+//   const token = req.cookies.token;
+
+//   // Verify the JWT token
+//   jwt.verify(token, secretKey, async (error, decodedToken) => {
+//     if (error) {
+//       console.error("JWT verification error:", error);
+//       return res.status(401).json({ message: "Unauthorized" });
+//     }
+
+//     // If token is valid, extract necessary information from decoded token
+//     const { id: authorId } = decodedToken;
+
+//     // Extract blog data from request body
+//     const { title, summary, content } = req.body;
+
+//     try {
+//       // Create a new post with the extracted data
+//       const post = await Post.create({
+//         title,
+//         summary,
+//         content,
+//         cover: url,
+//         author: authorId, // Assign authorId extracted from the token
+//       });
+
+//       // Send response with the created post
+//       return res.json(post);
+//     } catch (error) {
+//       console.error("Error creating post:", error);
+//       return res.status(500).json({ message: "Internal Server Error" });
+//     }
+//   });
+// });
 
 
 
