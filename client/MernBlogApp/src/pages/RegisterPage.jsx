@@ -7,7 +7,7 @@ function RegisterPage() {
 
   async function handleRegister(e) {
     e.preventDefault();
-    const response = await fetch("http://localhost:3000/register", {
+    const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/register`, {
       method: "POST",
       body: JSON.stringify({ username, password }),
       headers: { "Content-Type": "application/json" },

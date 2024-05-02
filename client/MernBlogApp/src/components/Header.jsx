@@ -9,7 +9,7 @@ export const Header=()=>{
   const {setuserInfo,userInfo} = useContext(UserContext);
 
   useEffect(() => {
-    fetch('http://localhost:3000/profile',{credentials:'include'}).then(response=>{
+    fetch(`${import.meta.env.VITE_API_BASE_URL}/profile`,{credentials:'include'}).then(response=>{
       response.json().then(userInfo=>{
         setuserInfo(userInfo)
       })
@@ -17,7 +17,7 @@ export const Header=()=>{
   }, [])
 
   function handleLogout(){
-    fetch('http://localhost:3000/logout',{
+    fetch(`${import.meta.env.VITE_API_BASE_URL}/logout`,{
       credentials:'include',
       method:'POST',
     });

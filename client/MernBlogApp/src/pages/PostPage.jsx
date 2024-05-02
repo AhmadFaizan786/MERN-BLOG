@@ -9,7 +9,7 @@ function PostPage() {
   const [postInfo, setpostInfo] = useState(null);
   const { userInfo } = useContext(UserContext);
   useEffect(() => {
-    fetch(`http://localhost:3000/post/${id}`).then((response) => {
+    fetch(`${import.meta.env.VITE_API_BASE_URL}/post/${id}`).then((response) => {
       response.json().then((postInfo) => {
         setpostInfo(postInfo);
       });

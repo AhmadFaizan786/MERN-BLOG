@@ -18,7 +18,7 @@ export const CreateBlog = () => {
     data.set("file", files[0]);
     e.preventDefault();
     console.log(files);
-    const response = await fetch("http://localhost:3000/post", {
+    const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/post`, {
       method: "POST",
       body: data,
       credentials: "include",
