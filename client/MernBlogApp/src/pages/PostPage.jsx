@@ -9,7 +9,7 @@ function PostPage() {
   const [postInfo, setpostInfo] = useState(null);
   const { userInfo } = useContext(UserContext);
   useEffect(() => {
-    fetch(`http://localhost:3000/post/${id}`).then((response) => {
+    fetch(`https://mern-blog-bqop.onrender.com/post/${id}`).then((response) => {
       response.json().then((postInfo) => {
         setpostInfo(postInfo);
       });

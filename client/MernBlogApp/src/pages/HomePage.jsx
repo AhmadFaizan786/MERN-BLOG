@@ -7,7 +7,7 @@ function HomePage() {
   const [posts, setposts] = useState([])
 
   useEffect(() => {
-    fetch('http://localhost:3000/post').then(response => {
+    fetch('https://mern-blog-bqop.onrender.com/post').then(response => {
       response.json().then(posts=>{
         setposts(posts)
       })
