@@ -14,7 +14,7 @@ const uploadMiddleware = multer({ dest: "/tmp" });
 const {S3Client, PutObjectCommand} = require('@aws-sdk/client-s3')
 const fs = require("fs");
 const Post = require("./models/Post");
-const crypto = require('crypto');
+// const crypto = require('crypto');
 // Generate a random JWT secret key
 // const generateJWTSecret = () => {
 //   return crypto.randomBytes(32).toString('hex');
@@ -30,9 +30,9 @@ app.use(express.json());
 app.use(cookieParser());
 app.use("/uploads", express.static(__dirname + "/uploads"));
 
-// mongoose.connect(
-//   process.env.MONGODB_URL
-// );
+mongoose.connect(
+  process.env.MONGODB_URL
+);
 
 //Funtion to upload images of blogs to S3 bucket.
 async function uploadToS3(path, originalFilename, mimetype){
@@ -59,9 +59,6 @@ async function uploadToS3(path, originalFilename, mimetype){
 //Register Api
 
 app.post("/register", async (req, res) => {
-  mongoose.connect(
-    process.env.MONGODB_URL
-  );
   const { username, password } = req.body;
   try {
     const UserDoc = await User.create({
@@ -78,9 +75,6 @@ app.post("/register", async (req, res) => {
 //Login Api
 
 app.post("/login", async (req, res) => {
-  mongoose.connect(
-    process.env.MONGODB_URL
-  );
   const { username, password } = req.body;
   const UserDoc = await User.findOne({ username });
   const passOk = bcrypt.compareSync(password, UserDoc.password);
@@ -99,9 +93,6 @@ app.post("/login", async (req, res) => {
 });
 
 app.get("/profile", (req, res) => {
-  mongoose.connect(
-    process.env.MONGODB_URL
-  );
   const { token } = req.cookies;
   jwt.verify(token, secretKey, {}, (error, info) => {
     if (error) throw error;
@@ -119,10 +110,6 @@ app.post("/logout", (req, res) => {
 //Create Blog Api
 
 app.post("/post",uploadMiddleware.single("file"), async (req, res) => {
-  mongoose.connect(
-    process.env.MONGODB_URL
-  );
-  // const PostDoc = [];
   const { originalname, path,mimetype } = req.file;
   const url = await uploadToS3(path,originalname,mimetype);
   // PostDoc.push(url)
@@ -157,9 +144,6 @@ app.post("/post",uploadMiddleware.single("file"), async (req, res) => {
 //Update Blog Api
 
 app.put("/post", uploadMiddleware.single("file"), async (req, res) => {
-  mongoose.connect(
-    process.env.MONGODB_URL
-  );
   let newPath = null;
   if (req.file) {
     // const { originalname, path } = req.file;
@@ -203,9 +187,6 @@ app.put("/post", uploadMiddleware.single("file"), async (req, res) => {
 });
 
 app.get("/post", async (req, res) => {
-  mongoose.connect(
-    process.env.MONGODB_URL
-  );
   const Posts = await Post.find()
     .populate("author", ["username"])
     .sort({ createdAt: -1 })
@@ -214,9 +195,6 @@ app.get("/post", async (req, res) => {
 });
 
 app.get("/post/:id", async (req, res) => {
-  mongoose.connect(
-    process.env.MONGODB_URL
-  );
   const { id } = req.params;
   const PostDoc = await Post.findById(id).populate("author", ["username"]);
   res.json(PostDoc);
