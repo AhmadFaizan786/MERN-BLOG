@@ -200,6 +200,21 @@ app.get("/post/:id", async (req, res) => {
   res.json(PostDoc);
 });
 
+app.use((req, res, next) => {
+  const { token } = req.cookies;
+  if (!token) {
+      return res.status(401).json({ message: "No token provided" });
+  }
+  jwt.verify(token, secretKey, (error, decoded) => {
+      if (error) {
+          return res.status(401).json({ message: "Failed to authenticate token" });
+      }
+      req.user = decoded;
+      next();
+  });
+});
+
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
