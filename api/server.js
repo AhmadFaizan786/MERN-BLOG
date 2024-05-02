@@ -1,5 +1,5 @@
 const express = require("express");
-require('dotenv').config();
+require("dotenv").config();
 const cors = require("cors");
 const { default: mongoose } = require("mongoose");
 const app = express();
@@ -11,18 +11,10 @@ const secretKey = process.env.JWT_SECRET_KEY;
 const cookieParser = require("cookie-parser");
 const multer = require("multer");
 const uploadMiddleware = multer({ dest: "/tmp" });
-const {S3Client, PutObjectCommand} = require('@aws-sdk/client-s3')
+const { S3Client, PutObjectCommand } = require("@aws-sdk/client-s3");
 const fs = require("fs");
 const Post = require("./models/Post");
-// const crypto = require('crypto');
-// Generate a random JWT secret key
-// const generateJWTSecret = () => {
-//   return crypto.randomBytes(32).toString('hex');
-// };
-// const secretKey = crypto.randomBytes(32).toString('hex')
 const bucket = "faizan-mern-blog";
-
-
 
 // Enable CORS for all routes
 app.use(cors({ credentials: true, origin: "http://localhost:5173" }));
@@ -30,34 +22,33 @@ app.use(express.json());
 app.use(cookieParser());
 app.use("/uploads", express.static(__dirname + "/uploads"));
 
-mongoose.connect(
-  process.env.MONGODB_URL
-);
+mongoose.connect(process.env.MONGODB_URL);
 
 //Funtion to upload images of blogs to S3 bucket.
-async function uploadToS3(path, originalFilename, mimetype){
+async function uploadToS3(path, originalFilename, mimetype) {
   const client = new S3Client({
-    region:'eu-north-1',
-    credentials:{
-      accessKeyId:process.env.S3_ACCESS_KEY,
-      secretAccessKey:process.env.S3_SECRET_ACCESS_KEY,
-    }
-  })
-  const parts = originalFilename.split('.');
+    region: "eu-north-1",
+    credentials: {
+      accessKeyId: process.env.S3_ACCESS_KEY,
+      secretAccessKey: process.env.S3_SECRET_ACCESS_KEY,
+    },
+  });
+  const parts = originalFilename.split(".");
   const ext = parts[parts.length - 1];
-  const newFilename = Date.now()+ '.' + ext;
-  await client.send(new PutObjectCommand({
-    Bucket:bucket,
-    Body:fs.readFileSync(path),
-    Key:newFilename,
-    ContentType:mimetype,
-    ACL:'public-read'
-  }))
+  const newFilename = Date.now() + "." + ext;
+  await client.send(
+    new PutObjectCommand({
+      Bucket: bucket,
+      Body: fs.readFileSync(path),
+      Key: newFilename,
+      ContentType: mimetype,
+      ACL: "public-read",
+    })
+  );
   return `https://${bucket}.s3.amazonaws.com/${newFilename}`;
 }
 
 //Register Api
-
 app.post("/api/register", async (req, res) => {
   const { username, password } = req.body;
   try {
@@ -71,9 +62,7 @@ app.post("/api/register", async (req, res) => {
   }
 });
 
-
 //Login Api
-
 app.post("/api/login", async (req, res) => {
   const { username, password } = req.body;
   const UserDoc = await User.findOne({ username });
@@ -92,6 +81,7 @@ app.post("/api/login", async (req, res) => {
   }
 });
 
+//profile of user once user logged in
 app.get("/api/profile", (req, res) => {
   const { token } = req.cookies;
   jwt.verify(token, secretKey, {}, (error, info) => {
@@ -101,23 +91,18 @@ app.get("/api/profile", (req, res) => {
   res.json(req.cookies);
 });
 
-//for logout
+//logout api
 app.post("/api/logout", (req, res) => {
   // res.cookie("token", "").json("Ok");
-  res.cookie("token", "", { expires: new Date(0) }).json("Logged out successfully");
+  res
+    .cookie("token", "", { expires: new Date(0) })
+    .json("Logged out successfully");
 });
 
-// //Create Blog Api
-
-app.post("/api/post",uploadMiddleware.single("file"), async (req, res) => {
-  const { originalname, path,mimetype } = req.file;
-  const url = await uploadToS3(path,originalname,mimetype);
-  // PostDoc.push(url)
-  // const parts = originalname.split(".");
-  // const ext = parts[parts.length - 1];
-  // const newPath = path + "." + ext;
-  // fs.renameSync(path, newPath);
-  // post.push(url)
+//Create Blog Api
+app.post("/api/post", uploadMiddleware.single("file"), async (req, res) => {
+  const { originalname, path, mimetype } = req.file;
+  const url = await uploadToS3(path, originalname, mimetype);
 
   const { token } = req.cookies;
   jwt.verify(token, secretKey, {}, async (error, info) => {
@@ -139,59 +124,12 @@ app.post("/api/post",uploadMiddleware.single("file"), async (req, res) => {
   });
 });
 
-// app.post("/post", uploadMiddleware.single("file"), async (req, res) => {
-//   const { originalname, path, mimetype } = req.file;
-//   const url = await uploadToS3(path, originalname, mimetype);
-
-//   // Extract the JWT token from the request cookies
-//   const token = req.cookies.token;
-
-//   // Verify the JWT token
-//   jwt.verify(token, secretKey, async (error, decodedToken) => {
-//     if (error) {
-//       console.error("JWT verification error:", error);
-//       return res.status(401).json({ message: "Unauthorized" });
-//     }
-
-//     // If token is valid, extract necessary information from decoded token
-//     const { id: authorId } = decodedToken;
-
-//     // Extract blog data from request body
-//     const { title, summary, content } = req.body;
-
-//     try {
-//       // Create a new post with the extracted data
-//       const post = await Post.create({
-//         title,
-//         summary,
-//         content,
-//         cover: url,
-//         author: authorId, // Assign authorId extracted from the token
-//       });
-
-//       // Send response with the created post
-//       return res.json(post);
-//     } catch (error) {
-//       console.error("Error creating post:", error);
-//       return res.status(500).json({ message: "Internal Server Error" });
-//     }
-//   });
-// });
-
-
-
 //Update Blog Api
-
 app.put("/api/post", uploadMiddleware.single("file"), async (req, res) => {
   let newPath = null;
   if (req.file) {
-    // const { originalname, path } = req.file;
-    // const parts = originalname.split(".");
-    // const ext = parts[parts.length - 1];
-    // newPath = path + "." + ext;
     const { originalname, path, mimetype } = req.file;
     newPath = await uploadToS3(path, originalname, mimetype);
-    // fs.renameSync(path, newPath);
   }
 
   const { token } = req.cookies;
@@ -238,21 +176,6 @@ app.get("/api/post/:id", async (req, res) => {
   const PostDoc = await Post.findById(id).populate("author", ["username"]);
   res.json(PostDoc);
 });
-
-// app.use((req, res, next) => {
-//   const { token } = req.cookies;
-//   if (!token) {
-//       return res.status(401).json({ message: "No token provided" });
-//   }
-//   jwt.verify(token, secretKey, (error, decoded) => {
-//       if (error) {
-//           return res.status(401).json({ message: "Failed to authenticate token" });
-//       }
-//       req.user = decoded;
-//       next();
-//   });
-// });
-
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
