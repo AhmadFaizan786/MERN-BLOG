@@ -27,6 +27,9 @@ header a {
 header a.logo {
   font-weight: bold;
   font-size: 2rem;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
 }
 
 header nav {
@@ -228,6 +231,7 @@ div.post p.description {
 
 a svg{
   height: 24px;
+  margin: 0 5px;
 }
 
 /* nav-link design */
@@ -397,4 +401,17 @@ button:hover {
   margin-bottom: 0;
   padding: 0;
   color: inherit; /* Ensures text inherits the editor's color */
+}
+
+/* Media query for screens with a maximum width of 600px */
+@media screen and (max-width: 600px) {
+  header a.logo {
+      font-size: 1rem;
+  }
+  header a.logo .globe-logo{
+    width: 20px;
+  }
+  header .nav-link{
+    font-size: small;
+  }
 }
